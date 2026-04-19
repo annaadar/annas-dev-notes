@@ -187,8 +187,7 @@ jstring Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetUTF8Text(JNIE
 - the function name is according to the JNI method naming conventions.
 - The code casts the jlong back into a native_data_t cpp pointer. This structure holds the Tesseract API instance.
 - initStateVariables prepares the environment, setting the app's state variables with default values and the current api object.
-- the native version of GetUTF8Text is called, actually triggering OCR on the Tesseract native library! If successful, we get back a string of the extracted text. The string is first stored in a char, then transformed into string using the NewStringUTF from the JNIEnv env reference.
-  The jstring tranformation is needed in order to send back the text to the invoker of the method, the jvm thread.
+- the native version of GetUTF8Text is called, actually triggering OCR on the Tesseract native library. If successful, it returns a pointer to a UTF-8 encoded C-string (char \*) containing the extracted text. it is then transformed into jstring using NewStringUTF. NewStringUTF takes the C-style string and creates a new java.lang.String object in the JVM heap that the Android app can understand.
 
 That's a full circle on invoking cpp methods + utilizing native libraries from an Android app! There's still much more i haven't covered, but that's not in the scope of the article.
 
