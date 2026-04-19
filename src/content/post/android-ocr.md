@@ -199,7 +199,6 @@ Likely inspired by JNI, the React Native team named their bridge the [JSI](https
 
 ## Resources
 
-- [Tesseract history](https://static.googleusercontent.com/media/research.google.com/iw//pubs/archive/33418.pdf) - "An Overview of the Tesseract OCR Engine." by Ray Smith, 2007.
 - [Tesseract on GitHub](https://github.com/tesseract-ocr/tesseract)
 - [Tesseract4android on Github](https://github.com/adaptech-cz/Tesseract4Android)
 - [JNI on the official Android documentation](https://developer.android.com/ndk/guides/jni-tips) -[JSI on the React Native Docs](https://reactnative.dev/architecture/landing-page)
