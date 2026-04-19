@@ -1,0 +1,64 @@
+---
+import { siteConfig } from "../../site.config";
+import { menuLinks } from "@/site.config";
+---
+
+<div class="flex sm:flex-col">
+	<a
+		aria-current={Astro.url.pathname === "/" ? "page" : false}
+		class="header inline-flex items-center sm:relative sm:inline-block sm:grayscale sm:hover:filter-none"
+		href="/"
+	>
+		<svg
+			viewBox="0 0 100 100"
+			class="text-accent hover:text-link header-logo h-10 w-10 cursor-pointer fill-none stroke-current transition-all"
+			xmlns="http://www.w3.org/2000/svg"
+			stroke-width="4"
+			stroke-linecap="round"
+			stroke-linejoin="round"
+		>
+			<path d="M15 30 H65 V75 C65 87 15 87 15 75 V30 Z"></path>
+
+			<path d="M65 40 C85 40 85 68 65 68"></path>
+
+			<path
+				d="M25 5 C20 12 30 18 25 25"
+				class="animate-pulse"
+				opacity="0.8"
+				stroke="var(--color-link)"></path>
+			<path
+				d="M50 5 C45 12 55 18 50 25"
+				class="animate-pulse"
+				opacity="0.6"
+				stroke="var(--color-link)"></path>
+
+			<path d="M28 50 L36 57 L28 64" stroke-width="3"></path>
+			<line x1="42" y1="64" x2="52" y2="64" stroke-width="3"></line>
+		</svg>
+
+		<span class="text-xl font-bold sm:text-2xl">{siteConfig.title}</span>
+	</a>
+	<nav
+		aria-label="Main menu"
+		class="bg-global-bg absolute -inset-x-4 top-12 hidden flex-col divide-y px-2 py-4 group-[.menu-open]:z-50 group-[.menu-open]:flex sm:static sm:z-auto sm:-ms-4 sm:mt-1 sm:flex sm:flex-row sm:divide-x sm:divide-y-0 sm:bg-transparent sm:p-0"
+		id="navigation-menu"
+	>
+		{
+			menuLinks.map((link) => (
+				<a
+					aria-current={Astro.url.pathname === link.path ? "page" : false}
+					class="text-accent px-2 py-4 font-semibold sm:px-4 sm:py-0 sm:underline-offset-2 sm:hover:underline"
+					href={link.path}
+				>
+					{link.title}
+				</a>
+			))
+		}
+	</nav>
+</div>
+<style>
+	.header {
+		display: flex;
+		gap: 0.75rem;
+	}
+</style>

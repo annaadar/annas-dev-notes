@@ -1,0 +1,104 @@
+@import "tailwindcss";
+/* tailwind to ignore satori generated og-image */
+@source not "../pages/og-image";
+/* config for tailwindcss-typography plugin */
+@config "../../tailwind.config.ts";
+
+/* use a selector-based strategy for dark mode */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* 1. REGISTER CUSTOM PROPERTIES */
+@property --color-global-bg {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: oklch(98.48% 0 0);
+}
+@property --color-global-text {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: oklch(26.99% 0.0096 235.05);
+}
+@property --color-link {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: oklch(70% 0.14 15); /* Solid Pink Hue */
+}
+@property --color-accent {
+	syntax: "<color>";
+	inherits: true;
+	initial-value: oklch(70% 0.14 15);
+}
+
+/* 2. THEME DEFINITION */
+@theme {
+	/* Light Mode: Warm Parchment & Deep Rose */
+	--color-global-bg: oklch(97% 0.015 85);
+	--color-global-text: oklch(25% 0.02 240);
+	--color-muted: oklch(50% 0.02 85);
+
+	/* THE PINK: Moved Hue to 15 (Red-Pink) and increased Chroma for "More Pink" */
+	--color-link: oklch(68% 0.18 15);
+	--color-accent: oklch(68% 0.18 15);
+
+	--color-accent-2: oklch(20% 0.04 240);
+	--color-quote: oklch(72% 0.14 15);
+}
+
+@layer base {
+	html {
+		&[data-theme="dark"] {
+			/* Dark Mode: Slate (26% L) */
+			--color-global-bg: oklch(26% 0.02 240) !important;
+			--color-global-text: oklch(90% 0.01 240) !important;
+			--color-muted: oklch(72% 0.03 240) !important;
+
+			/* PINK: Vibrant Rose for Dark Mode (Hue 15) */
+			--color-link: oklch(78% 0.16 15) !important;
+			--color-accent: oklch(78% 0.16 15) !important;
+
+			--color-accent-2: oklch(98% 0.01 220) !important;
+			--color-quote: oklch(78% 0.16 15) !important;
+		}
+	}
+
+	body {
+		font-weight: 450;
+	}
+}
+
+@layer components {
+	@import "./components/admonition.css";
+	@import "./components/github-card.css";
+
+	.cactus-link {
+		@apply decoration-muted underline underline-offset-4;
+		transition: all 0.2s ease-in-out;
+		&:hover {
+			@apply decoration-link decoration-2;
+			color: var(--color-link) !important;
+		}
+	}
+
+	.title {
+		@apply text-accent-2 text-2xl font-semibold;
+	}
+
+	/* Keeping your original code block logic with Pink border */
+	pre,
+	.prose pre {
+		@apply my-6 rounded-lg border-2 p-4;
+		border-color: oklch(68% 0.18 15 / 0.2) !important;
+	}
+}
+
+@utility prose {
+	--tw-prose-body: var(--color-global-text);
+	--tw-prose-bold: var(--color-global-text);
+	--tw-prose-bullets: var(--color-global-text);
+	--tw-prose-code: var(--color-global-text);
+	--tw-prose-headings: var(--color-accent-2);
+	--tw-prose-hr: 0.5px dashed #666;
+	--tw-prose-links: var(--color-link);
+	--tw-prose-quotes: var(--color-quote);
+	--tw-prose-th-borders: #666;
+}
