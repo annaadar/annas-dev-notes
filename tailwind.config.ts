@@ -3,6 +3,9 @@ import type { Config } from "tailwindcss";
 export default {
 	plugins: [require("@tailwindcss/typography")],
 	theme: {
+		screens:{
+			lg:"66rem"
+		},
 		extend: {
 			typography: () => ({
 				DEFAULT: {
