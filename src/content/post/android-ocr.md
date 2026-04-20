@@ -23,7 +23,7 @@ JNI, which stands for Java Native Interface, is the standard mechanism that allo
 #### JNI Implementation
 
 :::note
-The following code snippets are minimalistic examples of JNI implementation for kotlin+Cpp bridging, and are not meant for production usage.
+The following code snippets are minimalistic examples of JNI implementation for Kotlin+Cpp bridging, and are not meant for production usage.
 :::
 
 To implement JNI and bridge C++ libraries with Kotlin, we start by loading the shared library. This is typically done within a companion object using `System.loadLibrary` to ensure the native code is linked when the class is first loaded.
@@ -42,7 +42,7 @@ class NativeLib {
 }
 ```
 
-- The `external` keyword is used to assure the compiler the implementation of the method is implemented elsewhere, externally, and will be linked at runtime.
+- The `external` keyword is used to assure the compiler that the implementation of the method is implemented elsewhere, externally, and will be linked at runtime.
 
 After declaring the method in Kotlin, you provide the corresponding implementation in C++. The function name must follow the JNI naming convention: Java_PackageName_ClassName_MethodName.
 
@@ -59,18 +59,18 @@ Java_com_example_myapp_NativeLib_sayHello(JNIEnv* env, jobject /* this */) {
 
 A few notes -
 
-- the `extern "C"` is required to prevent C++ name mangling. Otherwise the compiler could change it at compile time and the function will be invisible to the Java linker.
-- `jstring` is the JNI version of a Java String. You cannot return a standard C++ std::string directly to Java. instead, you wrap it in a jstring. Likewise, there are also jboolean, jint, jlong, etc. We will see them later on in the tesseract4android's source code.
-- When the Android app first runs System.loadLibrary the JVM scans the .so library. If a method isn't exported, it won't be seen by the JVM. To essentially export it, you add the `JNIEXPORT` macro.
-- The `JNICALL` macro ensures the function is invoked correctly with the appropriate compiler directives, according to different platforms and operating systems. Although it may not be needed for the Android platform (as it does not require any special keywords for invoking methods) It is a best practice to include it.
+- The `extern "C"` is required to prevent C++ name mangling. Otherwise, the compiler could change it at compile time, and the function will be invisible to the Java linker.
+- `jstring` is the JNI version of a Java String. You cannot return a standard C++ std::string directly to Java. Instead, you wrap it in a jstring. Likewise, there are also jboolean, jint, jlong, etc. We will see them later on in the tesseract4android's source code.
+- When the Android app first runs System.loadLibrary, the JVM scans the .so library. If a method isn't exported, it won't be seen by the JVM. To essentially export it, you add the `JNIEXPORT` macro.
+- The `JNICALL` macro ensures the function is invoked correctly with the appropriate compiler directives, according to different platforms and operating systems. Although it may not be needed for the Android platform (as it does not require any special keywords for invoking methods), it is a best practice to include it.
 - The `JNIEnv` pointer provides access to most of the JNI functions needed to manipulate Java objects, classes, and methods. Your native functions receive a JNIEnv as the first argument, which points to a table of function pointers. For example, when you call NewStringUtf your actually performing a lookup. You look for the NewStringUtf in the env functions table and jump to that address. Then, you execute the code that transforms your C++ characters into a Java-compatible object.
 
-Now that I covered the fundamentals I'll deep dive into Tesseract4android source in order to understand the android bridging better.
+Now that we covered the fundamentals, we can deep dive into the Tesseract4android source in order to understand the Android bridging better.
 
 #### JNI + Tesseract
 
-In the tesseract4android repo, under `Tesseract4Android/tesseract4android/src/main`, there are two interesting directories - /cpp/tessreact, and /java/com/googlecode/tesseract. these two include the JNI implementation for the C++ library and java bridging.
-Starting form the Android implementation, let's review the TessBaseApi.java file. as you can infer from its name, it include the base class that will be linked to the cpp code. For the purpose of this article, these are the most important bits of this file -
+In the tesseract4android repo, under `Tesseract4Android/tesseract4android/src/main`, there are two interesting directories - /cpp/tessreact, and /java/com/googlecode/tesseract. These two include the JNI implementation for the C++ library and Java bridging.
+Starting from the Android implementation, let's review the TessBaseApi.java file. As you can infer from its name, it includes the base class that will be linked to the Cpp code. For this article, these are the most important bits of this file -
 The libraries being loaded and nativeClassInit called -
 
 ```java title="TessBaseApi.java"
@@ -94,7 +94,7 @@ public class TessBaseAPI {
 ```
 
 nativeClassInit is an external method without a body, since its body is implemented in the cpp section.
-Inside the TessBaseApi class, all the library`s native, external methods, that are implemented in cpp, are declared. Including nativeClassInit and other methods. Some for library initialization and some are the core methods that allow the developer to perform ocr in an Android app.
+Inside the TessBaseApi class, all the library's native and external methods implemented in C++ are declared, including nativeClassInit and other methods. Some are for library initialization, and some are the core methods that allow the developer to perform OCR in an Android app
 
 ```java title="TessBaseApi.java"
 // Adapted from tesseract4android by adaptech-cz
@@ -129,7 +129,7 @@ Inside the TessBaseApi class, all the library`s native, external methods, that a
 
 ```
 
-- In this code snippet, multiple native methods are declared. This is essentially the core of the library. In the original source code 36 native methods are declared. Since the method declaration is quite repetitive, I provided only a few examples. In here, you can spot some familiar methods - the `meanConfidence` which returns a mean confidence score of the last OCR operation performed, and the `GetUTF8Text` which returns the extracted text.
+- In this code snippet, multiple native methods are declared. This is essentially the core of the library. In the source code, 36 native methods are declared. Since the method declaration is quite repetitive, I provided only a few examples. In here, you can spot some familiar methods - the `meanConfidence`, which returns a mean confidence score of the last OCR operation performed, and the `GetUTF8Text`, which returns the extracted text.
 
 Let's focus specifically on `GetUTF8Text`. As an Android developer who added the Tesseract4Android dependency, you would never use it directly. Instead, you would call `getUTF8Text` on your TessBaseApi class instance. Let's check this method's source.
 
@@ -184,14 +184,14 @@ jstring Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetUTF8Text(JNIE
 
 ```
 
-- the function name is according to the JNI method naming conventions.
+- The function name is according to the JNI method naming conventions.
 - The code casts the jlong back into a native_data_t cpp pointer. This structure holds the Tesseract API instance.
 - initStateVariables prepares the environment, setting the app's state variables with default values and the current api object.
-- the native version of GetUTF8Text is called, actually triggering OCR on the Tesseract native library. If successful, it returns a pointer to a UTF-8 encoded C-string (char \*) containing the extracted text. it is then transformed into jstring using NewStringUTF. NewStringUTF takes the C-style string and creates a new java.lang.String object in the JVM heap that the Android app can understand.
+- The native version of GetUTF8Text is called, actually triggering OCR on the Tesseract native library. If successful, it returns a pointer to a UTF-8 encoded C-string (char \*) containing the extracted text. It is then transformed into jstring using NewStringUTF. NewStringUTF takes the C-style string and creates a new java.lang.String object in the JVM heap that the Android app can understand.
 
-That's a full circle on invoking cpp methods + utilizing native libraries from an Android app! There's still much more i haven't covered, but that's not in the scope of the article.
+That's a full circle on invoking C++ methods + utilizing native libraries from an Android app! There's still much more that has not been covered, but that's not in the scope of the article.
 
-Nevertheless, enjoy some extra read on another JNI-like mechanism
+Nevertheless, enjoy some extra reading on another JNI-like mechanism
 :::note[Extra Read]
 React Native also has its own JNI-like system, which allows JavaScript to interact with C++ or Kotlin/Swift code. This mechanism is part of the new RN Bridgeless Architecture, an approach that aims to simplify communication between JavaScript and native code by removing the traditional async bridge. The system is mainly useful for accessing specific iOS or Android features or running heavier operations that may not perform efficiently in JavaScript alone. JavaScript can hold a reference to a C++ object and vice versa. With this reference, you can directly invoke methods without serialization costs. The interface also uses JNI for its Java interop system.
 Likely inspired by JNI, the React Native team named their bridge the [JSI](https://reactnative.dev/architecture/landing-page#fast-javascriptnative-interfacing).
