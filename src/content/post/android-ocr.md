@@ -18,15 +18,14 @@ Implementing Tesseract on Android is not as straightforward as just adding a dep
 
 ### JNI
 
-JNI, which stands for Java Native Interface, is the standard mechanism that allows the bytecode compiled by the Android system from managed code (Java/Kotlin) to interact with native C/C++ code and vice versa. It is a core part of the Android NDK, and allows you to reuse existing C/C++ libraries instead of rewriting them in another, managed language.
+JNI, which stands for Java Native Interface, is the standard mechanism that allows the bytecode compiled by the Android system from managed code (Java/Kotlin) to interact with native C/C++ code and vice versa. It is a core part of the Android NDK, and enables reusing existing C/C++ libraries instead of rewriting them in another, managed language.
 
 #### JNI Implementation
 
 :::note
 The following code snippets are minimalistic examples of JNI implementation for Kotlin+Cpp bridging, and are not meant for production usage.
 :::
-
-To implement JNI and bridge C++ libraries with Kotlin, we start by loading the shared library. This is typically done within a companion object using `System.loadLibrary` to ensure the native code is linked when the class is first loaded.
+JNI bridges C++ libraries with Kotlin by first loading the shared library. This is typically done within a companion object using `System.loadLibrary` to ensure the native code is linked when the class is first loaded.
 
 ```kotlin
 class NativeLib {
@@ -60,12 +59,12 @@ Java_com_example_myapp_NativeLib_sayHello(JNIEnv* env, jobject /* this */) {
 A few notes -
 
 - The `extern "C"` is required to prevent C++ name mangling. Otherwise, the compiler could change it at compile time, and the function will be invisible to the Java linker.
-- `jstring` is the JNI version of a Java String. You cannot return a standard C++ std::string directly to Java. Instead, you wrap it in a jstring. Likewise, there are also jboolean, jint, jlong, etc. We will see them later on in the tesseract4android's source code.
+- `jstring` is the JNI version of a Java String. You cannot return a standard C++ std::string directly to Java. Instead, you wrap it in a jstring. Likewise, there are also jboolean, jint, jlong, etc. The source code below uses them.
 - When the Android app first runs System.loadLibrary, the JVM scans the .so library. If a method isn't exported, it won't be seen by the JVM. To essentially export it, you add the `JNIEXPORT` macro.
 - The `JNICALL` macro ensures the function is invoked correctly with the appropriate compiler directives, according to different platforms and operating systems. Although it may not be needed for the Android platform (as it does not require any special keywords for invoking methods), it is a best practice to include it.
 - The `JNIEnv` pointer provides access to most of the JNI functions needed to manipulate Java objects, classes, and methods. Your native functions receive a JNIEnv as the first argument, which points to a table of function pointers. For example, when you call NewStringUtf your actually performing a lookup. You look for the NewStringUtf in the env functions table and jump to that address. Then, you execute the code that transforms your C++ characters into a Java-compatible object.
 
-Now that we covered the fundamentals, we can deep dive into the Tesseract4android source in order to understand the Android bridging better.
+The Tesseract4android source reveals how Android bridging works in practice.
 
 #### JNI + Tesseract
 
@@ -155,7 +154,7 @@ Let's focus specifically on `GetUTF8Text`. As an Android developer who added the
 ```
 
 The method acts as a wrapper, or a getter, for the native, private, nativeGetUTF8Text method. It calls it inside a worker thread, handles any errors, and returns the result.
-Now, let's see what happens in the cpp code when we call getUTF8Text.
+Below is the C++ code that's executed after getUTF8Text is called.
 
 ```cpp title=TessBaseApi.cpp
 jstring Java_com_googlecode_tesseract_android_TessBaseAPI_nativeGetUTF8Text(JNIEnv *env,
@@ -193,7 +192,7 @@ That's a full circle on invoking C++ methods + utilizing native libraries from a
 
 Nevertheless, enjoy some extra reading on another JNI-like mechanism
 :::note[Extra Read]
-React Native also has its own JNI-like system, which allows JavaScript to interact with C++ or Kotlin/Swift code. This mechanism is part of the new RN Bridgeless Architecture, an approach that aims to simplify communication between JavaScript and native code by removing the traditional async bridge. The system is mainly useful for accessing specific iOS or Android features or running heavier operations that may not perform efficiently in JavaScript alone. JavaScript can hold a reference to a C++ object and vice versa. With this reference, you can directly invoke methods without serialization costs. The interface also uses JNI for its Java interop system.
+React Native also has its own JNI-like system, which allows JavaScript to interact with C++ or Kotlin/Swift code. This mechanism is part of the new RN Bridgeless Architecture, an approach that aims to simplify communication between JavaScript and native code by removing the traditional async bridge. The system is mainly useful for accessing specific iOS or Android features or running heavier operations that may not perform efficiently in JavaScript alone. JavaScript can hold a reference to a C++ object and vice versa.This reference enables direct method invocation without serialization costs. The interface also uses JNI for its Java interop system.
 Likely inspired by JNI, the React Native team named their bridge the [JSI](https://reactnative.dev/architecture/landing-page#fast-javascriptnative-interfacing).
 :::
 
