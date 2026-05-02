@@ -200,4 +200,5 @@ Likely inspired by JNI, the React Native team named their bridge the [JSI](https
 
 - [Tesseract on GitHub](https://github.com/tesseract-ocr/tesseract)
 - [Tesseract4android on Github](https://github.com/adaptech-cz/Tesseract4Android)
-- [JNI on the official Android documentation](https://developer.android.com/ndk/guides/jni-tips) -[JSI on the React Native Docs](https://reactnative.dev/architecture/landing-page)
+- [JNI on the official Android documentation](https://developer.android.com/ndk/guides/jni-tips)
+- [JSI on the React Native Docs](https://reactnative.dev/architecture/landing-page)
