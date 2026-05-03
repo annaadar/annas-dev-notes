@@ -15,13 +15,16 @@ interface Props {
 const {
 	meta: { articleDate, description = siteConfig.description, ogImage, title },
 } = Astro.props;
+const canonical = new URL(Astro.url.pathname, "https://annaadar.dev").href;
 ---
 
 <html class="scroll-smooth" lang={siteConfig.lang}>
 	<head>
 		<BaseHead articleDate={articleDate} description={description} ogImage={ogImage} title={title} />
 		<ThemeProvider />
-	</head><body
+		<link rel="canonical" href={canonical} />
+	</head>
+	<body
 		class="bg-global-bg text-global-text mx-auto flex min-h-screen max-w-5xl flex-col px-4 pt-16 font-mono text-base font-normal antialiased sm:px-8"
 	>
 		<Analytics />
