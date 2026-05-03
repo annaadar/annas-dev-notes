@@ -40,20 +40,25 @@ export default defineConfig({
 			icon: "public/icon.svg", // the source for generating favicon & icons
 			icons: [
 				{
-					src: "/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
+					src: "/icons/apple-touch-icon.png", // used in src/components/BaseHead.astro L:26
 					sizes: "180x180",
 					type: "image/png",
 				},
 				{
-					src: "/icon-192.png",
+					src: "/icons/icon-192.png",
 					sizes: "192x192",
 					type: "image/png",
 				},
 				{
-					src: "/icon-512.png",
+					src: "/icons/icon-512.png",
 					sizes: "512x512",
 					type: "image/png",
 				},
+				{
+					src: "/icons/favicon-96x96.png",
+					sizes: "96x96",
+					type: "image/png",
+				}
 			],
 			start_url: "/",
 			background_color: "#1d1f21",
