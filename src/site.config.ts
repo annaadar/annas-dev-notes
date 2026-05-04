@@ -14,7 +14,7 @@ export const siteConfig: SiteConfig = {
 	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
 	author: "Anna Adar",
 	// Used as the default description meta property and webmanifest description
-	description: "Anna Adar | Software Engineer | Building at the intersection of Mobile, Web, Low-level Systems, and Bioinformatics.",
+	description: "Anna Adar | Software Engineer | Building at the intersection of Mobile, Web and Low-level Systems.",
 	// HTML lang property, found in src/layouts/Base.astro L:18 & astro.config.ts L:48
 	lang: "en-GB",
 	// Meta property, found in src/components/BaseHead.astro L:42
