@@ -1,50 +1,52 @@
-<svg
-    viewBox="0 0 100 100"
-    xmlns="http://www.w3.org/2000/svg"
+<svg 
+    viewBox="0 0 100 100" 
+    xmlns="http://www.w3.org/2000/svg" 
     fill="none"
 >
-    <path 
-        d="M15 35 H65 V80 C65 92 15 92 15 80 V35 Z" 
-        stroke="#b34761" 
-        stroke-width="8"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-    ></path>
-    
-    <path 
-        d="M65 42 C85 42 85 70 65 70" 
-        stroke="#b34761" 
-        stroke-width="8"
-        stroke-linecap="round"
-    ></path>
+    <g transform="translate(5, 5) scale(0.9)">
+        <path 
+            d="M15 35 H65 V80 C65 92 15 92 15 80 V35 Z" 
+            stroke="#b34761" 
+            stroke-width="8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        ></path>
+        
+        <path 
+            d="M65 42 C85 42 85 70 65 70" 
+            stroke="#b34761" 
+            stroke-width="8"
+            stroke-linecap="round"
+        ></path>
 
-    <path
-        d="M25 5 C20 12 30 18 25 25"
-        stroke="#b34761"
-        stroke-width="6"
-        stroke-linecap="round"
-        opacity="0.8"
-    ></path>
-    <path
-        d="M50 5 C45 12 55 18 50 25"
-        stroke="#b34761"
-        stroke-width="6"
-        stroke-linecap="round"
-        opacity="0.6"
-    ></path>
+        <path
+            d="M25 5 C20 12 30 18 25 25"
+            stroke="#b34761"
+            stroke-width="6"
+            stroke-linecap="round"
+            opacity="0.8"
+        ></path>
+        <path
+            d="M50 5 C45 12 55 18 50 25"
+            stroke="#b34761"
+            stroke-width="6"
+            stroke-linecap="round"
+            opacity="0.6"
+        ></path>
 
-    <path 
-        d="M28 53 L36 60 L28 67" 
-        stroke="#b34761"
-        stroke-width="5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-    ></path>
-    <line 
-        x1="42" y1="67" 
-        x2="52" y2="67" 
-        stroke="#b34761"
-        stroke-width="5"
-        stroke-linecap="round"
-    ></line>
+        <path 
+            d="M28 53 L36 60 L28 67" 
+            stroke="#b34761"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        ></path>
+        <line 
+            x1="42" y1="67" 
+            x2="52" y2="67" 
+            stroke="#b34761"
+            stroke-width="5"
+            stroke-linecap="round"
+        ></line>
+    </g>
 </svg>
