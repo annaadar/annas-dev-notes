@@ -1,7 +1,7 @@
 ---
 title: Under the hood of ESLint and Prettier - ASTs and the TypeScript Compiler API
 description: “The engine powers the most popular Typescript extensions, and how does it work?”
-publishDate: "2026-05-13T11:23:00Z"
+publishDate: "2026-05-28T11:23:00Z"
 ---
 
 How TypeScript tools like Prettier and ESLint actually work is often abstracted. A few VS Code actions are configured, and the codebase is perfectly formatted on every save. At some point, that surface-level understanding becomes insufficient. I am quite opposed to relying on black-box abstractions that I cannot debug or replicate. I want to understand the underlying logic, and it turns out, almost all of these tools share the exact same starting point.
