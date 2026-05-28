@@ -1,9 +1,9 @@
 <svg 
-    viewBox="0 0 100 100" 
+    viewBox="0 0 130 130" 
     xmlns="http://www.w3.org/2000/svg" 
     fill="none"
 >
-    <g transform="translate(5, 5) scale(0.9)">
+    <g transform="translate(25, 16)">
         <path 
             d="M15 35 H65 V80 C65 92 15 92 15 80 V35 Z" 
             stroke="#b34761" 
