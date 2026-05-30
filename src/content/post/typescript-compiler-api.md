@@ -1,23 +1,23 @@
 ---
-title: Under the hood of ESLint and Prettier - ASTs and the TypeScript Compiler API
-description: “The engine powers the most popular Typescript extensions, and how does it work?”
+title: "Writing Custom Code Transformers: ASTs and the TypeScript Compiler API"
+description: “How the engines powering the most popular TypeScript extensions actually work.”
 publishDate: "2026-05-28T11:23:00Z"
 ---
 
-How TypeScript tools like Prettier and ESLint actually work is often abstracted. A few VS Code actions are configured, and the codebase is perfectly formatted on every save. At some point, that surface-level understanding becomes insufficient. I am quite opposed to relying on black-box abstractions that I cannot debug or replicate. I want to understand the underlying logic, and it turns out, almost all of these tools share the exact same starting point.
+How TypeScript tools like Prettier and ESLint actually work is often abstracted away. A few VS Code configurations ensure codebases are seamlessly formatted and linted on every save. However, a surface-level understanding eventually becomes insufficient. Relying on black-box abstractions limits the ability to debug complex issues or build custom developer tools. Gaining complete control over these tools requires understanding the underlying logic, and it turns out, almost all of them share the exact same starting point.
 
-### The structure - Abstract Syntax Trees
+### The structure: Abstract Syntax Trees
 
-To manipulate code programmatically, you can't just read it like a regular text document. Before any tool can fix or lint your code, it has to be converted from its current human-readable state (a string of characters) into a machine-readable structure. That is happening with ASTs.
-Abstract Syntax Trees are the format that powers almost every tool in the TypeScript ecosystem. ESLint, Prettier, and the VS Code language server all start by converting your code into one.
-When you type const user: User = getUser(id);, the parser doesn't see a sentence. It sees a hierarchical map. Each piece of the code becomes a node in a tree, with a specific role.
-The following code -
+Code cannot be manipulated programmatically as plain text. Before a linter or formatter can evaluate source code, the human-readable string must be parsed into a machine-readable data structure. This transformation happens using ASTs.
+Abstract Syntax Trees are the format that powers almost every tool in the TypeScript ecosystem. ESLint, Prettier, and the VS Code Language Server all start by converting your code into one.
+Given a standard declaration like `const user: User = getUser(id);`, the parser doesn't read a sequence of characters. it constructs a hierarchical map. Each piece of the code becomes a node in a tree, with a specific role.
+The following code:
 
 ```typescript
 const user: User = getUser(id);
 ```
 
-Turns into the following structure -
+maps directly to this structural representation:
 
 ```
 VariableStatement
@@ -29,19 +29,20 @@ VariableStatement
         └── Identifier "id"
 ```
 
-This line of code is transformed and read as a tree of nodes. A VariableStatement containing a VariableDeclaration containing a CallExpression. Each node knows its kind, its position in the file, and its children. Written code is just a string; the AST is the structure underneath it.
+This line of code is transformed and read as a tree of nodes. `A VariableStatement containing a VariableDeclaration containing a CallExpression`. Each node knows its kind, its position in the file, and its children. Written code is just a string, while the AST is the structure underneath it.
 
-Tools like Prettier and ESLint can be thought of as Tree traversers -
+Tools like Prettier and ESLint can be thought of as `tree traversers` -
 
-- ESLint - Traverses the tree looking for specific nodes (e.g., "Find all VariableDeclaration nodes that lack a specific naming convention").
+- `ESLint` - Traverses the tree looking for specific nodes (e.g., `"identify all VariableDeclaration nodes that violate camelCase naming conventions"`).
 
-- Prettier: Traverses the tree to re-serialize it. It effectively breaks the tree apart and reassembles it according to a set of style rules.
+- `Prettier`: Traverses the tree to re-serialize it. It breaks the tree apart and reassembles it according to a set of style rules.
 
-### Analyzing code - The TypeScript Compiler API
+### Analyzing code: The TypeScript Compiler API
 
-ASTs are the underlying data structure, but there is still a need for a compiler API in order to read, create, and analyze them. For that, you have the TypeScript Compiler Api. It's the programmatic toolbox that allows interaction and manipulation of the data structure. While the AST is the object, the Compiler API is the set of functions used to traverse, query, and modify that object.
+While ASTs provide the underlying data structure, reading, creating, and analyzing them requires a dedicated engine. This is the exact role of the TypeScript Compiler API. It's the programmatic toolbox that allows interaction and manipulation of the data structure. While the AST is the object, the Compiler API is the set of functions used to traverse, query, and modify that object.
 
-A tool worth mentioning is the [TypeScript AST Viewer](https://ts-ast-viewer.com/). It lets you paste in any valid TypeScript code and outputs it as an AST. It’s great for both learning and development purposes.
+A practical tool for this is the [TypeScript AST Viewer](https://ts-ast-viewer.com/). It maps out the exact AST for any valid TypeScript snippet you paste in, making it much easier to figure out how to target specific nodes when writing your own scripts.
+
 For example, pasting in the previous code line immediately visualizes the tree structure discussed above, and interacting with it reveals the raw properties the compiler uses:
 ![ast explorer demo](20260513-1928-34.8643920.gif)
 
@@ -51,9 +52,9 @@ For a recent project, I needed to automate the conversion of TypeScript interfac
 
 - Parse the source TypeScript files into an AST.
 
-- Walk the tree to find InterfaceDeclaration and PropertySignature nodes (indicating models).
+- Walk the tree to find `InterfaceDeclaration` and `PropertySignature` nodes (indicating models).
 
-- Map TypeScript types (string, number, boolean) to their Go equivalents.
+- Map TypeScript types (`string`, `number`, `boolean`) to their Go equivalents.
   for example, mapping primitive TypeScript types to their Go equivalent -
 
 ```typescript
@@ -76,7 +77,7 @@ export function mapPrimitiveType(typeNode: ts.TypeNode): string | undefined {
 
 You can check out the full implementation of the transformer [here](https://github.com/annaadar/ts-to-go).
 
-Getting comfortable with the Compiler API essentially “ruins” the magic of ESLint and Prettier - in a good way. With this knowledge, you can see that nothing in programming is actually magic; it’s just something you have not learned yet.
+Working directly with the Compiler API makes it clear how tools like ESLint and Prettier actually operate. It serves as a reminder that complex tooling relies on predictable logic rather than magic. It is simply a matter of breaking down and understanding the underlying structures.
 
 ## Resources
 
