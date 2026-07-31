@@ -2,6 +2,7 @@
 title: "Native Interop in Android: OCR, Tesseract and JNI"
 description: Why I bypassed cloud-based OCR for a privacy-focused medical filing app.
 publishDate: "2026-04-19T11:23:00Z"
+ogImage: "/android-s.png"
 ---
 
 ### Choosing An OCR Engine

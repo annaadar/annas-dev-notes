@@ -2,6 +2,7 @@
 title: "Writing Custom Code Transformers: ASTs and the TypeScript Compiler API"
 description: “How the engines powering the most popular TypeScript extensions actually work.”
 publishDate: "2026-05-28T11:23:00Z"
+ogImage: "/ts-s.png"
 ---
 
 How TypeScript tools like Prettier and ESLint actually work is often abstracted away. A few VS Code configurations ensure codebases are seamlessly formatted and linted on every save. However, a surface-level understanding eventually becomes insufficient. Relying on black-box abstractions limits the ability to debug complex issues or build custom developer tools. Gaining complete control over these tools requires understanding the underlying logic, and it turns out, almost all of them share the exact same starting point.
@@ -44,7 +45,7 @@ While ASTs provide the underlying data structure, reading, creating, and analyzi
 A practical tool for this is the [TypeScript AST Viewer](https://ts-ast-viewer.com/). It maps out the exact AST for any valid TypeScript snippet you paste in, making it much easier to figure out how to target specific nodes when writing your own scripts.
 
 For example, pasting in the previous code line immediately visualizes the tree structure discussed above, and interacting with it reveals the raw properties the compiler uses:
-![ast explorer demo](20260513-1928-34.8643920.gif)
+![ast explorer demo](/ast-view.gif)
 
 ### Putting it into practice: TS-to-Go
 
