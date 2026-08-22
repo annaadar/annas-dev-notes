@@ -1,5 +1,6 @@
 ---
 import { WEBMENTION_PINGBACK, WEBMENTION_URL } from "astro:env/client";
+import SchemaOrg from "@/components/SchemaOrg.astro";
 import { siteConfig } from "@/site.config";
 import type { SiteMeta } from "@/types";
 import "@/styles/global.css";
@@ -85,3 +86,13 @@ const socialImageURL = new URL(ogImage ? ogImage : "/main-s.png", Astro.url).hre
 }
 
 <meta content={Astro.generator} name="generator" />
+
+{/* Structured data (JSON-LD) */}
+<SchemaOrg
+	type={articleDate ? "article" : "website"}
+	title={title}
+	description={description}
+	canonicalURL={canonicalURL.href}
+	image={socialImageURL}
+	datePublished={articleDate}
+/>

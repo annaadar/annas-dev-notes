@@ -1,0 +1,65 @@
+---
+import { siteConfig } from "@/site.config";
+
+interface Props {
+	type: "article" | "website";
+	title: string;
+	description?: string | undefined;
+	canonicalURL: string;
+	image: string;
+	datePublished?: string | undefined;
+	dateModified?: string | undefined;
+}
+
+const {
+	type,
+	title,
+	description = siteConfig.description,
+	canonicalURL,
+	image,
+	datePublished,
+	dateModified,
+} = Astro.props;
+
+const personId = `${siteConfig.url}/#person`;
+
+const person = {
+	"@type": "Person",
+	"@id": personId,
+	name: siteConfig.author,
+	url: siteConfig.url,
+};
+
+const website = {
+	"@type": "WebSite",
+	"@id": `${siteConfig.url}/#website`,
+	url: siteConfig.url,
+	name: siteConfig.title,
+	description: siteConfig.description,
+	inLanguage: siteConfig.lang,
+	publisher: { "@id": personId },
+};
+
+const graph: Record<string, unknown>[] = [person, website];
+
+if (type === "article") {
+	graph.push({
+		"@type": "BlogPosting",
+		"@id": `${canonicalURL}#article`,
+		headline: title,
+		description,
+		image,
+		url: canonicalURL,
+		datePublished,
+		dateModified: dateModified ?? datePublished,
+		inLanguage: siteConfig.lang,
+		author: { "@id": personId },
+		publisher: { "@id": personId },
+		mainEntityOfPage: { "@type": "WebPage", "@id": canonicalURL },
+	});
+}
+
+const jsonLd = { "@context": "https://schema.org", "@graph": graph };
+---
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify(jsonLd)} />
