@@ -3,6 +3,7 @@ title: "Tracing FGS Restrictions in AOSP (API 28–34)"
 description: "Why Android's biggest updates over the last few years have nothing to do with the UI, and everything to do with restricting background execution."
 publishDate: "2026-10-03"
 tags: ["android", "security", "aosp"]
+ogImage: "/android-vers-s.png"
 ---
 
 When Android started releasing Android 17 to personal devices, a friend got the update notification and asked if I had downloaded it yet. After I replied positively and mentioned I found it pretty cool, he was puzzled by my reaction - and generally by me spending my free time reading Android version releases.
