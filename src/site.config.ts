@@ -14,7 +14,8 @@ export const siteConfig: SiteConfig = {
 	// Used as both a meta property (src/components/BaseHead.astro L:31 + L:49) & the generated satori png (src/pages/og-image/[slug].png.ts)
 	author: "Anna Adar",
 	// Used as the default description meta property and webmanifest description
-	description: "Anna Adar | Software Engineer | Building at the intersection of Mobile, Web and Low-level Systems.",
+	description:
+		"Anna Adar | Software Engineer | Building at the intersection of Mobile, Web and Low-level Systems.",
 	// HTML lang property, found in src/layouts/Base.astro L:18 & astro.config.ts L:48
 	lang: "en-GB",
 	// Meta property, found in src/components/BaseHead.astro L:42
@@ -63,6 +64,8 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 			frameBoxShadowCssValue: "none",
 		},
 		uiLineHeight: "inherit",
+		scrollbarThumbColor: "#4b5563", // Tailwind gray-600
+		scrollbarThumbHoverColor: "#184184",
 	},
 	themeCssSelector(theme, { styleVariants }) {
 		// If one dark and one light theme are available
@@ -77,5 +80,5 @@ export const expressiveCodeOptions: AstroExpressiveCodeOptions = {
 	},
 	// One dark, one light theme => https://expressive-code.com/guides/themes/#available-themes
 	themes: ["dracula", "github-light"],
-	useThemedScrollbars: false,
+	useThemedScrollbars: true,
 };
