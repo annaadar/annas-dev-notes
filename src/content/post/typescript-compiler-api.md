@@ -2,7 +2,7 @@
 title: "Writing Custom Code Transformers: ASTs and the TypeScript Compiler API"
 description: “How the engines powering the most popular TypeScript extensions actually work.”
 publishDate: "2026-05-28T11:23:00Z"
-ogImage: "/ts-s.png"
+# ogImage: "/ts-s.png"
 ---
 
 How TypeScript tools like Prettier and ESLint actually work is often abstracted away. A few VS Code configurations ensure codebases are seamlessly formatted and linted on every save. However, a surface-level understanding eventually becomes insufficient. Relying on black-box abstractions limits the ability to debug complex issues or build custom developer tools. Gaining complete control over these tools requires understanding the underlying logic, and it turns out, almost all of them share the exact same starting point.
