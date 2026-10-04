@@ -1,11 +1,12 @@
 import { Resvg } from "@resvg/resvg-js";
-import type { APIContext, InferGetStaticPropsType } from "astro";
+import type { APIContext } from "astro";
 import satori, { type SatoriOptions } from "satori";
 import RobotoMonoBold from "@/assets/roboto-mono-700.ttf";
 import RobotoMono from "@/assets/roboto-mono-regular.ttf";
 import { getAllPosts } from "@/data/post";
 import { getFormattedDate } from "@/utils/date";
 import { ogMarkup } from "./_ogMarkup";
+import { siteConfig } from "@/site.config"; // 1. Import your site config
 
 const ogOptions: SatoriOptions = {
 	// debug: true,
@@ -27,18 +28,28 @@ const ogOptions: SatoriOptions = {
 	width: 1200,
 };
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+// 2. Adjust Props so pubDate is optional for the homepage
+type Props = {
+	title: string;
+	pubDate?: Date;
+};
 
 export async function GET(context: APIContext) {
 	const { pubDate, title } = context.props as Props;
+	const isHome = context.params.slug === "home";
 
-	const postDate = getFormattedDate(pubDate, {
-		month: "long",
-		weekday: "long",
-	});
-	const svg = await satori(ogMarkup(title, postDate), ogOptions);
+	// 3. For the homepage card, swap the date for your site description
+	const subtitle = isHome
+		? siteConfig.description
+		: getFormattedDate(pubDate!, {
+				month: "long",
+				weekday: "long",
+			});
+
+	const svg = await satori(ogMarkup(title, subtitle), ogOptions);
 	const pngBuffer = new Resvg(svg).render().asPng();
 	const png = new Uint8Array(pngBuffer);
+
 	return new Response(png, {
 		headers: {
 			"Cache-Control": "public, max-age=31536000, immutable",
@@ -49,7 +60,8 @@ export async function GET(context: APIContext) {
 
 export async function getStaticPaths() {
 	const posts = await getAllPosts();
-	return posts
+
+	const postPaths = posts
 		.values()
 		.filter(({ data }) => !data.ogImage)
 		.map((post) => ({
@@ -60,4 +72,15 @@ export async function getStaticPaths() {
 			},
 		}))
 		.toArray();
+
+	// 4. Inject the homepage manually into the builder
+	const homePath = {
+		params: { slug: "home" },
+		props: {
+			title: siteConfig.title,
+			pubDate: undefined,
+		},
+	};
+
+	return [...postPaths, homePath];
 }
